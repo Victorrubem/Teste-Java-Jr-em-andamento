@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<Resource id="AGENDA_JTA_DS" type="DataSource">
+	  jtaManaged = true
+	  jdbcDriver = org.h2.Driver
+	  #jdbcUrl = jdbc:h2:///tmp/cabtecgti/agenda;mode=mysql
+	  jdbcUrl = jdbc:h2:mem:agenda;mode=mysql
+	  userName = sa
+	  password = 
+          defaultAutoCommit = false
+          testOnBorrow = true
+          validationQuery = SELECT 1
+          validationInterval = 30000
+	  maxActive = 10
+	  maxWait = -1
+	  maxIdle = 2
+	  removeAbandoned = true
+	  logAbandoned = true
+	  removeAbandonedTimeout = 100
+	</Resource>
+	<Resource id="AGENDA_DS" type="DataSource">
+	  jtaManaged false
+	  jdbcDriver org.h2.Driver
+	  #jdbcUrl = jdbc:h2:///tmp/cabtecgti/agenda;mode=mysql
+	  jdbcUrl = jdbc:h2:mem:agenda;mode=mysql
+	  userName = sa
+	  password = 
+          defaultAutoCommit false
+          testOnBorrow true
+          validationQuery SELECT 1
+          validationInterval 30000
+	  maxActive 10
+	  maxWait -1
+	  maxIdle 2
+	  removeAbandoned true
+	  logAbandoned true
+	  removeAbandonedTimeout 100
+	</Resource>
+</resources>

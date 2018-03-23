@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event listener="#{contatosAction.search()}" type="preRenderView" />
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+
+	<f:loadBundle basename="messages_pt_BR" var="bundle" />
+	<ui:param name="masterAction" value="#{contatosAction}" />
+	
+	<ui:define name="pageContentHeader">
+		<hr />
+		<h5 class="box-title" align="center">Selecione um contato</h5>
+		<hr />
+	</ui:define>
+	
+	<ui:define name="pageContent">
+	
+		<div class="row">
+			<div class="col-sm-12 ">
+				<div class="container">
+				
+						<h:panelGrid styleClass="box-buttons" columns="2">
+							<p:inputText value="#{masterAction.filtro.campo}" id="Campo"
+								placeholder="Pesquisa" />
+							<p:commandButton value="#{bundle.lblPesquisar}"
+								action="#{masterAction.search()}" update="dtResult" process="@all" />
+						</h:panelGrid>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-12">
+				<p:panel id="pnlContatos" styleClass="semBorda">
+					<p:dataTable id="dtResult" var="item" rowKey="#{item.id}" value="#{masterAction.result}" 
+						selectionMode="single" selection="#{masterAction.selected}" paginatorPosition="bottom"
+						rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" emptyMessage="" lazy="true">
+
+						<p:ajax event="rowSelect"
+							listener="#{masterAction.selectGoRecado}" />
+
+						<f:facet name="header">
+							<h:outputText value="Selecione um contato para iniciar" />
+						</f:facet>
+
+						<p:column headerText="#{bundle.lblNome}">
+							<h:outputText value="#{item.nome}" />
+						</p:column>
+						
+						<p:column headerText="Recados Lidos" >
+							<h:outputText value="" />
+						</p:column>
+						
+						<p:column headerText="Recados Não Lidos" >
+							<h:outputText value="" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+			</div>
+		</div>
+
+	</ui:define>
+	
+	
+
+
+</ui:composition>
+</html>

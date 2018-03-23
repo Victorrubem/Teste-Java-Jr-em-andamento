@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+
+<ui:composition template="template.xhtml">
+	<f:loadBundle basename="messages_pt_BR" var="bundle" />
+	<ui:param name="masterAction" value="#{recadosAction}" />
+
+	<ui:define name="pageContentHeader">
+		<hr />
+		<h4 class="box-title">Recados de
+			#{masterAction.contatoSelecionado.nome}</h4>
+		<hr />
+	</ui:define>
+
+	<ui:define name="pageContent">
+	
+	</ui:define>
+</ui:composition>
+</html>

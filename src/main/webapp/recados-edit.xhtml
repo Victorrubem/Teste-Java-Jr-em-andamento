@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+
+	<f:viewParam name="id" value="#{recadosAction.idContato}"></f:viewParam>
+	<f:event listener="#{recadosAction.getIdContatoSelected()}"
+		type="preRenderView" />
+	<f:event listener="#{recadosAction.search()}" type="preRenderView" />
+
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+
+	<f:loadBundle basename="messages_pt_BR" var="bundle" />
+	<ui:param name="masterAction" value="#{recadosAction}" />
+
+	<ui:define name="pageContentHeader">
+		<hr />
+		<h4 class="box-title">Recados de
+			#{masterAction.contatoSelecionado.nome}</h4>
+		<hr />
+	</ui:define>
+
+	<ui:define name="pageContent">
+
+		<div class="form-group row">
+			<div class="col-sm-12">
+				<p:inputTextarea id="text" value="#{masterAction.entity.texto}"
+					maxlength="255" placeholder="Digite seu recado"
+					styleClass="inputAuto form-control" label="Digite o Texto" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12 ">
+				<h:panelGrid styleClass="box-buttons" columns="3">
+					<p:commandButton value="#{bundle.lblSalvar}"
+						action="#{masterAction.save()}" process="@form" update="@form" />
+					<p:commandButton value="#{bundle.lblExcluir}"
+						action="#{masterAction.delete()}" process="@form" update="@form"
+						rendered="#{masterAction.id != null and masterAction.id != 0}" />
+					<p:commandButton value="#{bundle.lblVoltar}"
+						action="#{masterAction.navBack()}" process="@none" update="@none"
+						ajax="false" immediate="true" />
+				</h:panelGrid>
+			</div>
+		</div>
+
+		<br />
+		<hr />
+
+		<div class="row">
+			<div class="col-sm-6">
+				<h:dataTable id="dtResult" var="item" rowKey="#{item.id}"
+					value="#{masterAction.result}" paginatorPosition="bottom" rows="10" paginator="true"
+					emptyMessage="" lazy="true" binding="#{masterAction.table}">
+
+					<f:facet name="header">
+						<h:outputText value="#{bundle.lblListaDeRecados}" />
+					</f:facet>
+
+					<h:column headerText="#{bundle.lblStatus}">
+						
+						<h:commandButton styleClass="box-buttons" value="#{item.indLido ?  'Visualizado' : 'Não Visualizado'}" 
+						actionListener="#{masterAction.cliked}" immediate="true" />
+						
+					</h:column>
+
+				</h:dataTable>
+			</div>
+
+			
+			<div class="col-sm-6">
+				<p:panel id="toggleable" header="Recado Selecionado" toggleable="true"
+					closable="true" toggleSpeed="500" closeSpeed="500"
+					widgetVar="panel" style="margin-bottom:20px"
+					>
+					<p:ajax event="close" listener="#{masterAction.onClose}" />
+					<p:ajax event="toggle" listener="#{masterAction.onToggle}" />
+
+					<h:panelGrid columns="2" cellpadding="10">
+						<h:outputText value="#{masterAction.recadoSelect.texto}" />
+					</h:panelGrid>
+				</p:panel>
+
+			</div>
+
+
+
+		</div>
+
+	</ui:define>
+</ui:composition>
+</html>

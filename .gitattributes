@@ -1,0 +1,10 @@
+*.txt  		text
+*.java 		text
+*.sh   		text
+*.bat  		text
+*.xml  		text
+*.xhtml 	text
+*.html 		text
+*.properties 	text
+*.jasper 	binary
+

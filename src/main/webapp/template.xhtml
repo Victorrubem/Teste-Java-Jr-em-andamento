@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+ 
+  <h:head>
+    <script type="text/javascript">
+    	var contextPath = "#{request.contextPath}";
+    </script>
+    <f:facet name="first">
+      <title>Agenda</title>
+      <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+      <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+      <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+      <link rel="stylesheet" href="#{request.contextPath}/resources/bootstrap-4.0/css/bootstrap.min.css"/>
+      <link rel="stylesheet" href="#{request.contextPath}/resources/bootstrap-4.0/css/awesome-bootstrap-checkbox.css"/>
+      <link rel="stylesheet" href="#{request.contextPath}/resources/bootstrap-4.0/css/bootstrap-select.css"/>
+      <link rel="stylesheet" href="#{request.contextPath}/resources/bootstrap-4.0/css/bootstrap-social.css"/>
+      <h:outputStylesheet library="css" name="app.css" target="head" />
+    </f:facet>
+    <f:facet name="last">
+      <h:outputScript library="js" name="app.js" target="body"/>
+    </f:facet>
+  </h:head>
+  <h:body>
+  
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+      <a class="navbar-brand" href="#">AGENDA</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item #{masterAction.menu == 'home' ? 'active' : ''}">
+            <a class="nav-link" href="#{request.contextPath}/default.xhtml?faces-redirect=true">Home</a>
+          </li>
+          <li class="nav-item #{masterAction.menu == 'contatos' ? 'active' : ''}">
+            <a class="nav-link" href="#{request.contextPath}/contatos.xhtml?faces-redirect=true">Contatos</a>
+          </li>
+          <li class="nav-item #{masterAction.menu == 'recados' ? 'active' : ''}">
+            <a class="nav-link" href="#{request.contextPath}/recados.xhtml?faces-redirect=true">Recados</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="navbar navbar-right">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fa fa-person"></i> Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main" class="container">
+      <h:form id="formCenter">
+        <div class="box box-primary">
+          <div class="box-header">
+              <ui:insert name="pageContentHeader">
+              </ui:insert>
+          </div>
+          <div class="box-body">
+            <div class="row">
+              <div class="col-sm-12 messages">
+                <p:messages id="msgs_formCenter" showDetail="false" closable="true" autoUpdate="false" escape="false" />
+              </div>
+            </div>
+            <ui:insert name="pageContent"></ui:insert>
+          </div>
+          <span class="edit-actions-anchor"/>
+          <div class="box-footer botoesEdicao">
+            <ui:insert name="botoesAcao">
+            </ui:insert>
+          </div>
+        </div>
+      </h:form>
+    </main><!-- /.container -->
+    
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="#{request.contextPath}/resources/bootstrap-4.0/js/bootstrap.bundle.min.js"></script>
+</h:body>
+</html>

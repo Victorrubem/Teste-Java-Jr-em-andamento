@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<f:metadata>
+	<f:viewParam name="id" value="#{contatosAction.id}"></f:viewParam>
+	<f:event listener="#{contatosAction.editOrCreate()}"
+		type="preRenderView" />
+</f:metadata>
+
+<ui:composition template="template-edit.xhtml">
+	<f:loadBundle basename="messages_pt_BR" var="bundle" />
+	<ui:param name="masterAction" value="#{contatosAction}" />
+
+	<ui:define name="pageContentHeader">
+		<h4>Contato</h4>
+	</ui:define>
+
+	<ui:define name="pageContent">
+		
+		<div class="form-group row">
+			<p:outputLabel value="#{bundle.lblId}:"
+				styleClass="col-sm-1 col-form-label" />
+			<div class="col-sm-6">
+				<h:outputText value="#{masterAction.entity.id}"
+					rendered="#{masterAction.entity.id != null}" />
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<p:outputLabel value="#{bundle.lblNome}:*" for="nome"
+				styleClass="col-sm-1 col-form-label" />
+			<div class="col-sm-6">
+				<p:inputText id="nome" value="#{masterAction.entity.nome}"
+					maxlength="140" styleClass="inputAuto form-control" />
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<p:outputLabel value="#{bundle.lblRamal}:*" for="ramal"
+				styleClass="col-sm-1 col-form-label" />
+			<div class="col-sm-1">
+				<p:inputText id="ramal" value="#{masterAction.entity.ramal}"
+					type="number" maxlength="5" styleClass="inputAuto form-control" />
+			</div>
+		</div>
+
+	</ui:define>
+</ui:composition>
+</html>

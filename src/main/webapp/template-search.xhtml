@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="template.xhtml">
+	<f:loadBundle basename="messages_pt_BR" var="bundle" />
+
+	<ui:define name="pageContentHeader">
+
+		<div class="container">
+			<h4 class="box-title">#{bundle.lblPesquisar}</h4>
+
+
+
+			<div class="box-buttons">
+
+				<h:panelGrid columns="4">
+					<p:inputText value="#{masterAction.filtro.campo}" id="Campo"
+						placeholder="Pesquisa" />
+						
+					<p:commandButton value="#{bundle.lblPesquisar}" 
+						action="#{masterAction.search()}" update="dtResult" process="@all" />
+						
+					<p:commandButton value="#{bundle.lblLimpar}"
+						action="#{masterAction.clear()}" process="@form" update="dtResult" />
+					
+					<p:commandButton value="#{bundle.lblNovo}"
+						action="#{masterAction.goCreate()}" ajax="=false" process="@this" />
+				</h:panelGrid>
+			</div>
+
+		</div>
+
+	</ui:define>
+
+	<ui:define name="botoesAcao">
+	</ui:define>
+</ui:composition>
+</html>

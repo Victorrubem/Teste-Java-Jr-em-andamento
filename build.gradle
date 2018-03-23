@@ -1,0 +1,102 @@
+import org.gradle.plugins.ide.eclipse.model.WbResource
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+
+description = 'Agenda - Diretorio Telefonico'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+		url "https://repository.primefaces.org"
+	}
+}
+
+configurations {
+	provided
+	provided.visible = false
+	provided.transitive = false
+	providedPlusCompile.extendsFrom(compile, provided)
+	testCompile.extendsFrom(providedPlusCompile)
+	provided.allDependencies.all {
+		dep -> configurations.default.exclude(group: dep.group, module: dep.name)
+	}
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets.main {
+	compileClasspath = configurations.providedPlusCompile
+}
+
+dependencies {
+    compile(group: 'org.hibernate', name: 'hibernate-core', version:'4.2.12.Final') {
+			exclude(module: 'javassist')
+			exclude(module: 'hibernate-jpa-2.0-api')
+			exclude(module: 'jboss-transaction-api_1.1_spec')
+	    }
+
+	compile ("org.hibernate:hibernate-entitymanager:4.2.12.Final") {
+        exclude(module: 'jboss-transaction-api_1.1_spec')
+    }	
+	
+	compile 'javax.validation:validation-api:1.0.0.GA'
+	compile 'org.flywaydb:flyway-core:4.0.3'
+	compile 'org.slf4j:slf4j-api:1.7.21'
+	compile 'org.apache.logging.log4j:log4j-api:2.6'
+	compile 'org.apache.logging.log4j:log4j-core:2.6'
+	compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.6'
+	compile 'org.apache.logging.log4j:log4j-1.2-api:2.6'
+    compile ('org.primefaces:primefaces:4.0') {transitive = false;}
+    compile ('org.primefaces.themes:bootstrap:1.0.10') {transitive = false;}
+
+    provided(group: 'javax.validation', name: 'validation-api', version:'1.0.0.GA')
+    provided(group: 'org.apache.myfaces.core', name: 'myfaces-api', version:'2.1.10')
+    provided(group: 'org.apache.geronimo.specs', name: 'geronimo-jpa_2.0_spec', version:'1.1')
+    provided(group: 'org.apache.geronimo.specs', name: 'geronimo-ejb_3.1_spec', version:'1.0.2') 
+    provided(group: 'javax', name: 'javaee-web-api', version:'6.0') 
+}
+
+eclipse {
+	classpath {
+		downloadSources=true
+		downloadJavadoc=true
+	}
+	
+	jdt {
+		javaRuntimeName = "JavaSE-1.8"
+	}
+
+    wtp {
+      component {
+      }
+  
+      facet {
+        //for examples see docs for EclipseWtpFacet
+          facet name: 'java', version: '1.8'
+          facet name: 'jst.web', version: '3.0'
+          facet name: 'jst.jsf', version: '2.1'
+          facet name: 'wst.jsdt.web', version: '1.0'
+      }
+    }
+   classpath.file.whenMerged {
+       entries.findAll {
+           it.path.startsWith('src/test')
+       }*.output = 'bin-test'
+   }
+   
+   wtp.component.file.whenMerged {
+       wbModuleEntries.findAll {
+           it instanceof WbResource && it.sourcePath.startsWith('/src/test')
+       }*.deployPath = null
+   }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "4.4"
+}

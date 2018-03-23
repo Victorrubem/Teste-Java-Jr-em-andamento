@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:h="http://java.sun.com/jsf/html" 
+  xmlns:f="http://java.sun.com/jsf/core" 
+  xmlns:p="http://primefaces.org/ui">
+  
+<ui:composition template="template.xhtml">
+  <f:loadBundle basename="messages_pt_BR" var="bundle" />
+  
+  <ui:insert name="pageContentHeader">
+  </ui:insert>
+  
+  <ui:define name="botoesAcao">
+    <p:commandButton value="#{bundle.lblSalvar}" action="#{masterAction.save()}" process="@form" update="@form" />
+    <p:commandButton value="#{bundle.lblExcluir}" action="#{masterAction.delete()}" process="@form" update="@form" rendered="#{masterAction.id != null and masterAction.id != 0}"/>
+    <p:commandButton value="#{bundle.lblVoltar}" action="#{masterAction.navBack()}" process="@none" update="@none" ajax="false" immediate="true"/>
+  </ui:define>
+</ui:composition>
+</html>
