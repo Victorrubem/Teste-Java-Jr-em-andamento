@@ -27,7 +27,6 @@ public class RecadoRepository extends AbstractRepository<Recado, Long> {
     @Override
     public Criteria searchCampo(Criteria criteria, FiltroSearch filtro){
     	criteria.add(Restrictions.like(filtro.getNomeCampo(), Long.parseLong(filtro.getCampo())));
-    	//criteria.add(Restrictions.ilike(filtro.getNomeCampo(), filtro.getCampo(),MatchMode.START));
 		return criteria;
     }
    

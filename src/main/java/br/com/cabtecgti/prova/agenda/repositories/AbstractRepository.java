@@ -102,8 +102,7 @@ public abstract class AbstractRepository<E extends MasterEntity, ID extends Seri
 			return new ResultList<>(result, count, filtro.getPrimeiroRegistro(), filtro.getQuantidadeRegistros());
 		} else {
 		
-			return new ResultList<>(Collections.emptyList(), count, filtro.getPrimeiroRegistro(),
-					filtro.getQuantidadeRegistros());
+			return new ResultList<>(Collections.emptyList(), count, filtro.getPrimeiroRegistro(),filtro.getQuantidadeRegistros());
 		}
 	}
 

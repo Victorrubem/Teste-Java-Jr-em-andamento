@@ -2,14 +2,13 @@ package br.com.cabtecgti.prova.agenda.controllers;
 
 import java.util.Date;
 
-
-
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import org.primefaces.event.CloseEvent;
+
 import org.primefaces.event.ToggleEvent;
 
 import br.com.cabtecgti.prova.agenda.entities.Contato;
@@ -35,7 +34,6 @@ public class RecadosAction extends BaseAction {
 
 	public RecadosAction() {
 		super("recados");
-		setSelectListener(new ContatoSelected());
 		setFiltro(new FiltroSearch());
 	}
 
@@ -101,20 +99,6 @@ public class RecadosAction extends BaseAction {
 	 * 
 	 * 
 	 * */
-	private class ContatoSelected implements SelectListener {
-		@Override
-		public void selected(final Object selected) {
-			final Contato contato = (Contato) selected;
-			RecadosAction.this.navigateToEdit("recados-edit.xhtml", contato.getId());
-		}
-
-		@Override
-		public void selectedGoRecado(Object selected) {
-			final Contato contato = (Contato) selected;
-			RecadosAction.this.navigateToEdit("recados-edit.xhtml", contato.getId());
-			
-		}
-	}
 	
 	public void getIdContatoSelected() {
 		if (FacesContext.getCurrentInstance().isPostback()) {
@@ -206,6 +190,8 @@ public class RecadosAction extends BaseAction {
 	public void setRecadoSelect(Recado recadoSelect) {
 		this.recadoSelect = recadoSelect;
 	}
+
+	
 
 
 }

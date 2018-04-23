@@ -58,23 +58,32 @@
 
     <main role="main" class="container">
       <h:form id="formCenter">
+      	<p:growl id="growl" showDetail="true" sticky="true" showSummary="false" /> 
         <div class="box box-primary">
           <div class="box-header">
+          
               <ui:insert name="pageContentHeader">
               </ui:insert>
+              
           </div>
+          
           <div class="box-body">
             <div class="row">
               <div class="col-sm-12 messages">
                 <p:messages id="msgs_formCenter" showDetail="false" closable="true" autoUpdate="false" escape="false" />
               </div>
             </div>
-            <ui:insert name="pageContent"></ui:insert>
+            
+            <ui:insert name="pageContent">
+            </ui:insert>
+            
           </div>
           <span class="edit-actions-anchor"/>
           <div class="box-footer botoesEdicao">
+          
             <ui:insert name="botoesAcao">
             </ui:insert>
+            
           </div>
         </div>
       </h:form>

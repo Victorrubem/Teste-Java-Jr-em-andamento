@@ -1,7 +1,6 @@
 package br.com.cabtecgti.prova.agenda.controllers;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -9,9 +8,13 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
+import br.com.cabtecgti.prova.agenda.entities.Contato;
+import br.com.cabtecgti.prova.agenda.entities.MasterEntity;
+import br.com.cabtecgti.prova.agenda.entities.Recado;
 import br.com.cabtecgti.prova.agenda.repositories.ContatoRepository;
 import br.com.cabtecgti.prova.agenda.repositories.FiltroSearch;
 import br.com.cabtecgti.prova.agenda.repositories.RecadoRepository;
@@ -30,7 +33,9 @@ public abstract class BaseAction implements Serializable {
 	private final String menu;
 	private Long id;
 	private Object entity;
-
+	private List<Object> objetosBanco;
+	
+	
 	/**
 	 * Guarda o resultado de uma pesquisa.
 	 */
@@ -38,28 +43,13 @@ public abstract class BaseAction implements Serializable {
 	private Integer offset = 0;
 	private Integer limit = SEARCH_LIMIT_DEFAULT;
 	private Object selected;
-	private SelectListener selectListener;
 	private FiltroSearch filtro;
 	@EJB
 	private RecadoRepository repoRecado;
 	@EJB
 	private ContatoRepository repoContato;
 
-	/**
-	 * Método disparado quando um item é selecionado na lista. Se houver um
-	 * {@link #listener} configurado, o mesmo é notificado.
-	 */
-	public void select() {
-		if (selectListener != null) {
-			selectListener.selected(selected);
-		}
-	}
 	
-	public void selectGoRecado() {
-		if (selectListener != null) {
-			selectListener.selectedGoRecado(selected);
-		}
-	}
 
 	/**
 	 * Construtor que recebe o identificador de menu relativo à página em
@@ -91,6 +81,12 @@ public abstract class BaseAction implements Serializable {
 		final StringBuilder outcome = new StringBuilder(page).append("?id=").append(id).append("&faces-redirect=true");
 		navigateTo(outcome.toString());
 	}
+	
+	public void goEdit(SelectEvent event) {
+		final MasterEntity entity = (MasterEntity) event.getObject();
+		final StringBuilder outcome = new StringBuilder(menu).append("-edit.xhtml").append("?id=").append(entity.getId()).append("&faces-redirect=true");
+		navigateTo(outcome.toString());
+    }
 
 	// Alterei o if com && getId() != 0, recebia 0 como prâmetro
 	public void editOrCreate() {
@@ -117,13 +113,15 @@ public abstract class BaseAction implements Serializable {
 		}
 	}
 
-	protected ResultList<?> doSearch() {
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "MÉTODO AGUARDANDO IMPLEMENTAÇÃO.", null));
-
-		return new ResultList<Object>(Collections.emptyList(), 0, offset, limit);
-	}
-
+	protected abstract ResultList<?> doSearch();
+	
+	
+	/**
+	 * Método a ser implementado na classe descendente.
+	 * 
+	 */
+	
+	
 	//
 	// Inner classes
 	//
@@ -134,6 +132,7 @@ public abstract class BaseAction implements Serializable {
 
 		private int currentRow;
 		private ResultList<?> queryResult;
+		
 
 		public LazyDataModel() {
 			this.setPageSize(0);
@@ -145,19 +144,22 @@ public abstract class BaseAction implements Serializable {
 			updateResult(queryResult);
 		}
 
+		@SuppressWarnings("unchecked")
 		public void updateResult(final ResultList<?> queryResult) {
 			this.queryResult = queryResult;
-
+			
 			setWrappedData(queryResult.getResult());
 			setPageSize(queryResult.getLimit());
 			setRowCount(queryResult.getTotalCount());
 			setRowIndex(getPageSize() > 0 ? queryResult.getOffset() : -1);
+			setObjetosBanco((List<Object>) queryResult.getResult());
 		}
 
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<Object> load(final int first, final int pageSize, final String sortField, final SortOrder sortOrder,
-				final Map<String, String> filters) {
+				final Map<String, Object> filters) {
 
 			offset = first;
 			limit = pageSize;
@@ -172,20 +174,35 @@ public abstract class BaseAction implements Serializable {
 
 		@Override
 		public List<Object> load(final int first, final int pageSize, final List<SortMeta> multiSortMeta,
-				final Map<String, String> filters) {
+				final Map<String, Object> filters) {
 
 			throw new UnsupportedOperationException("Lazy loading for multiSort is not implemented.");
 		}
+		
+		
+		 @Override
+		 public Object getRowData(String rowKey) {
+			 for(Object contato : getObjetosBanco()) {
+		            if(((MasterEntity) contato).getId() == Long.parseLong(rowKey)){
+		                return contato;
+		            }
+		        }
+			return null;
+		 }
+		 
+		 @Override
+		 public Object getRowKey(Object objeto) {
+			 return ((MasterEntity) objeto).getId();
+		 }
+		
 	}
+	
 
 	/**
 	 * Método a ser implementado na classe descendente. Apresenta formulário
 	 * vazio para cadastrar um novo registro.
 	 */
-	public void create() {
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "MÉTODO AGUARDANDO IMPLEMENTAÇÃO.", null));
-	}
+	public abstract void create();
 
 	/**
 	 * Método a ser implementado na classe descendente. Recupera uma entidade
@@ -194,22 +211,51 @@ public abstract class BaseAction implements Serializable {
 	 * @param id
 	 *            ID da entidade
 	 */
-	public void edit(final Object id) {
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "MÉTODO AGUARDANDO IMPLEMENTAÇÃO.", null));
-	}
+	public abstract void edit(final Object id);
 
-	public void delete() {
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "MÉTODO AGUARDANDO IMPLEMENTAÇÃO.", null));
-	}
+	public abstract void delete();
 
-	public void save() {
-
-		System.out.println("Entrou no Save");
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "MÉTODO AGUARDANDO IMPLEMENTAÇÃO.", null));
+	public abstract void save();
+	
+	
+	/**
+	 * Método verifica qual o tipo (Contato/Recado) logo em seguida salva/altera. 
+	 */
+	public void salva() {
+		
+		final MasterEntity entity = (MasterEntity) this.getEntity();
+		String msg = null;
+		
+		if (entity.getId() != null && entity.getId()!= 0) {
+			
+			if(entity instanceof Contato){
+				final Contato contato = (Contato) entity;
+				this.setEntity(this.getRepoContato().update(contato));
+			}else{
+				if(entity instanceof Recado){
+					final Recado recado = (Recado) entity;
+					this.setEntity(this.getRepoRecado().update(recado));
+				}
+			}
+			msg = "Registro salvo com sucesso.";
+			
+		} else {
+			
+			if(entity instanceof Contato){
+				final Contato contato = (Contato) entity;
+				this.setEntity(this.getRepoContato().create(contato));
+			}else{
+				if(entity instanceof Recado){
+					final Recado recado = (Recado) entity;
+					this.setEntity(this.getRepoRecado().create(recado));
+				}
+			}
+			msg = "Registro criado com sucesso.";
+		}
+		this.setEntity(null);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
 	}
+	
 
 	/**
 	 * Retorna o resultado de uma pesquisa.
@@ -261,10 +307,6 @@ public abstract class BaseAction implements Serializable {
 		this.limit = limit;
 	}
 
-	protected void setSelectListener(final SelectListener selectListener) {
-		this.selectListener = selectListener;
-	}
-
 	public void clear() {
 		this.result = null;
 	}
@@ -300,5 +342,15 @@ public abstract class BaseAction implements Serializable {
 	public void setRepoContato(ContatoRepository repoContato) {
 		this.repoContato = repoContato;
 	}
+
+	public List<Object> getObjetosBanco() {
+		return objetosBanco;
+	}
+
+	public void setObjetosBanco(List<Object> objetosBanco) {
+		this.objetosBanco = objetosBanco;
+	}
+
+	
 
 }

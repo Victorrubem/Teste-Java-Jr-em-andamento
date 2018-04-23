@@ -1,8 +1,12 @@
 package br.com.cabtecgti.prova.agenda.controllers;
 
+
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+
 
 import br.com.cabtecgti.prova.agenda.entities.Contato;
 import br.com.cabtecgti.prova.agenda.repositories.FiltroSearch;
@@ -13,11 +17,11 @@ import br.com.cabtecgti.prova.agenda.repositories.ResultList;
 public class ContatosAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
+	private List<Contato> filtrados;
 	
 
 	public ContatosAction() {
 		super("contatos");
-		setSelectListener(new ContatoSelected());
 		setFiltro(new FiltroSearch());
 	}
 
@@ -46,20 +50,7 @@ public class ContatosAction extends BaseAction {
 		}
 	}
 
-	@Override
-	public void save() {
-		final Contato entity = (Contato) getEntity();
-		String msg = null;
-		if (entity.getId() != null && entity.getId()!= 0) {
-			setEntity(this.getRepoContato().update(entity));
-			msg = "Registro salvo com sucesso.";
-		} else {
-			setEntity(this.getRepoContato().create(entity));
-			msg = "Registro criado com sucesso.";
-		}
-		setEntity(null);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
-	}
+	
 	
 	@Override
 	public void delete() {
@@ -72,19 +63,13 @@ public class ContatosAction extends BaseAction {
 		
 	}
 	
-	private class ContatoSelected implements SelectListener {
-		@Override
-		public void selected(final Object selected) {
-			final Contato contato = (Contato) selected;
-			ContatosAction.this.navigateToEdit("contatos-edit.xhtml", contato.getId());
-		}
-		@Override
-		public void selectedGoRecado(Object selected) {
-			final Contato contato = (Contato) selected;
-			ContatosAction.this.navigateToEdit("recados-edit.xhtml", contato.getId());
-			
-		}
-		
+	
+	public List<Contato> getFiltrados() {
+		return filtrados;
+	}
+
+	public void setFiltrados(List<Contato> filtrados) {
+		this.filtrados = filtrados;
 	}
 
 }

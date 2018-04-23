@@ -52,7 +52,7 @@ dependencies {
 	compile 'org.apache.logging.log4j:log4j-core:2.6'
 	compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.6'
 	compile 'org.apache.logging.log4j:log4j-1.2-api:2.6'
-    compile ('org.primefaces:primefaces:4.0') {transitive = false;}
+    compile ('org.primefaces:primefaces:6.2') {transitive = false;}
     compile ('org.primefaces.themes:bootstrap:1.0.10') {transitive = false;}
 
     provided(group: 'javax.validation', name: 'validation-api', version:'1.0.0.GA')
