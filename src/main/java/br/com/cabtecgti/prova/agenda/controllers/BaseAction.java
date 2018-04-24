@@ -90,9 +90,7 @@ public abstract class BaseAction implements Serializable {
 	}
 	
 
-//Bloco de Navegação
-	
-	
+//Bloco de Navegação de Páginas
 	// Navegar para o endereço fornecido
 	protected void navigateTo(final String outcome) {
 		final FacesContext ctx = FacesContext.getCurrentInstance();
