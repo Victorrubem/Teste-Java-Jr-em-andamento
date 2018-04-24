@@ -22,8 +22,6 @@ public class RecadosAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
 
-	
-
 	private Contato contatoSelecionado;
 	private Long idContato;
 	private boolean click;
@@ -51,17 +49,7 @@ public class RecadosAction extends BaseAction {
 	public void create() {
 		setEntity(new Recado());
 	}
-
-	@Override
-	public void edit(final Object id) {
-		final Recado recado = this.getRepoRecado().findById((Long) id);
-		setEntity(recado);
-		if (recado == null) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro não encontrado. ID", null));
-		}
-	}
-
+	
 	@Override
 	public void save() {
 		System.out.println("Entrou no Save " + ((Recado) getEntity()).getTexto());
@@ -81,6 +69,17 @@ public class RecadosAction extends BaseAction {
 
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
 	}
+
+	@Override
+	public void edit(final Object id) {
+		final Recado recado = this.getRepoRecado().findById((Long) id);
+		setEntity(recado);
+		if (recado == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro não encontrado. ID", null));
+		}
+	}
+
 
 	@Override
 	public void delete() {

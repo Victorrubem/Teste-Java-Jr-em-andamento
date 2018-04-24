@@ -32,8 +32,9 @@ public abstract class BaseAction implements Serializable {
 	private static final int SEARCH_LIMIT_DEFAULT = 10;
 	private final String menu;
 	private Long id;
-	private Object entity;
-	private List<Object> objetosBanco;
+	private MasterEntity entity;
+	
+	private List<MasterEntity> objetosBanco;
 	
 	
 	/**
@@ -44,12 +45,11 @@ public abstract class BaseAction implements Serializable {
 	private Integer limit = SEARCH_LIMIT_DEFAULT;
 	private Object selected;
 	private FiltroSearch filtro;
+	
 	@EJB
 	private RecadoRepository repoRecado;
 	@EJB
 	private ContatoRepository repoContato;
-
-	
 
 	/**
 	 * Construtor que recebe o identificador de menu relativo à página em
@@ -61,6 +61,38 @@ public abstract class BaseAction implements Serializable {
 		this.menu = menu;
 	}
 
+
+
+	// Alterei o if com && getId() != 0, recebia 0 como parâmetro
+	// Método que atribui o tipo da entidade(entity) à ser alterada ou incluida
+	public void editOrCreate() {
+		if (FacesContext.getCurrentInstance().isPostback()) {
+			return;
+		}
+		if (this.getId() != null && this.getId() != 0) {
+			edit(this.getId());
+		} else {
+			create();
+		}
+	}
+
+	public void search() {
+		final ResultList<?> resultList = doSearch();
+		final Object result = this.getResult();
+		if (result instanceof LazyDataModel) {
+			final LazyDataModel dataModel = (LazyDataModel) result;
+			dataModel.updateResult(resultList);
+			
+		} else {
+			
+			setResult(new LazyDataModel(resultList));
+		}
+	}
+	
+
+//Bloco de Navegação
+	
+	
 	// Navegar para o endereço fornecido
 	protected void navigateTo(final String outcome) {
 		final FacesContext ctx = FacesContext.getCurrentInstance();
@@ -87,40 +119,10 @@ public abstract class BaseAction implements Serializable {
 		final StringBuilder outcome = new StringBuilder(menu).append("-edit.xhtml").append("?id=").append(entity.getId()).append("&faces-redirect=true");
 		navigateTo(outcome.toString());
     }
-
-	// Alterei o if com && getId() != 0, recebia 0 como prâmetro
-	public void editOrCreate() {
-		if (FacesContext.getCurrentInstance().isPostback()) {
-			return;
-		}
-		if (getId() != null && getId() != 0) {
-			edit(getId());
-		} else {
-			create();
-		}
-	}
-
-	public void search() {
-		final ResultList<?> resultList = doSearch();
-		final Object result = getResult();
-		if (result instanceof LazyDataModel) {
-			final LazyDataModel dataModel = (LazyDataModel) result;
-			dataModel.updateResult(resultList);
-			
-		} else {
-			
-			setResult(new LazyDataModel(resultList));
-		}
-	}
-
-	protected abstract ResultList<?> doSearch();
 	
+//Fim do Bloco de Navegação
 	
-	/**
-	 * Método a ser implementado na classe descendente.
-	 * 
-	 */
-	
+
 	
 	//
 	// Inner classes
@@ -144,6 +146,8 @@ public abstract class BaseAction implements Serializable {
 			updateResult(queryResult);
 		}
 
+	
+		
 		@SuppressWarnings("unchecked")
 		public void updateResult(final ResultList<?> queryResult) {
 			this.queryResult = queryResult;
@@ -152,7 +156,7 @@ public abstract class BaseAction implements Serializable {
 			setPageSize(queryResult.getLimit());
 			setRowCount(queryResult.getTotalCount());
 			setRowIndex(getPageSize() > 0 ? queryResult.getOffset() : -1);
-			setObjetosBanco((List<Object>) queryResult.getResult());
+			setObjetosBanco((List<MasterEntity>) queryResult.getResult());
 		}
 
 		
@@ -197,6 +201,13 @@ public abstract class BaseAction implements Serializable {
 		
 	}
 	
+	
+	
+	/**
+	 * Método a ser implementado na classe descendente.
+	 * 
+	 */
+	protected abstract ResultList<?> doSearch();
 
 	/**
 	 * Método a ser implementado na classe descendente. Apresenta formulário
@@ -223,7 +234,7 @@ public abstract class BaseAction implements Serializable {
 	 */
 	public void salva() {
 		
-		final MasterEntity entity = (MasterEntity) this.getEntity();
+		final MasterEntity entity =  this.getEntity();
 		String msg = null;
 		
 		if (entity.getId() != null && entity.getId()!= 0) {
@@ -278,10 +289,14 @@ public abstract class BaseAction implements Serializable {
 		this.selected = selected;
 	}
 
-	public Object getEntity() {
+	public MasterEntity getEntity() {
 		return entity;
 	}
-
+	
+	protected void setEntity(final MasterEntity entity) {
+		this.entity = entity;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -315,9 +330,6 @@ public abstract class BaseAction implements Serializable {
 		return menu;
 	}
 
-	protected void setEntity(final Object entity) {
-		this.entity = entity;
-	}
 
 	public FiltroSearch getFiltro() {
 		return filtro;
@@ -343,11 +355,13 @@ public abstract class BaseAction implements Serializable {
 		this.repoContato = repoContato;
 	}
 
-	public List<Object> getObjetosBanco() {
-		return objetosBanco;
+	
+	public List<MasterEntity> getObjetosBanco() {
+		return this.objetosBanco;
 	}
 
-	public void setObjetosBanco(List<Object> objetosBanco) {
+	
+	public void setObjetosBanco(List<MasterEntity> objetosBanco) {
 		this.objetosBanco = objetosBanco;
 	}
 

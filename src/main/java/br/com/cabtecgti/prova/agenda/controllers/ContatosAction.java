@@ -39,11 +39,17 @@ public class ContatosAction extends BaseAction {
 	public void create() {
 		setEntity(new Contato());
 	}
+	
+	@Override
+	public void save() {
+		
+		
+	}
 
 	@Override
 	public void edit(final Object id) {
 		final Contato contato = this.getRepoContato().findById((Long) id);
-		setEntity(contato);
+		super.setEntity(contato);
 		if (contato == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro não encontrado.", null));
@@ -54,7 +60,6 @@ public class ContatosAction extends BaseAction {
 	
 	@Override
 	public void delete() {
-	
 		Contato entity = (Contato) getEntity();
 		this.getRepoContato().delete(entity);
 		setEntity(null);
@@ -71,5 +76,7 @@ public class ContatosAction extends BaseAction {
 	public void setFiltrados(List<Contato> filtrados) {
 		this.filtrados = filtrados;
 	}
+
+	
 
 }
